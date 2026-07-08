@@ -1,0 +1,298 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid p-0">
+
+    <!-- Page Header -->
+    <div class="page-header d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1>Analytics Dashboard</h1>
+            <p>Interactive data visualizations and detailed historical trend metrics.</p>
+        </div>
+        <div>
+            <span class="badge bg-primary px-3 py-2"><i class="fas fa-chart-bar me-2"></i>Data Engine Active</span>
+        </div>
+    </div>
+
+    <!-- --- EIGHT STATISTICS CARDS --- -->
+    <div class="row g-3 mb-4">
+        <!-- 1. Total Readings -->
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card" style="padding: 1.15rem;">
+                <div class="stat-card-header mb-1">
+                    <h2 class="stat-card-title" style="font-size: 0.8rem;">Total Logs</h2>
+                    <div class="stat-card-icon" style="width: 32px; height: 32px; font-size: 1.05rem; background: linear-gradient(135deg, var(--primary), var(--accent));">
+                        <i class="fas fa-database"></i>
+                    </div>
+                </div>
+                <div id="val-total" class="stat-card-value" style="font-size: 1.5rem; margin: 0;">0</div>
+                <p class="stat-card-desc" style="font-size: 0.72rem; margin: 0;">Total sensor logs stored</p>
+            </div>
+        </div>
+
+        <!-- 2. Safe Readings -->
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card card-safe" style="padding: 1.15rem;">
+                <div class="stat-card-header mb-1">
+                    <h2 class="stat-card-title" style="font-size: 0.8rem;">Safe Readings</h2>
+                    <div class="stat-card-icon" style="width: 32px; height: 32px; font-size: 1.05rem; background: var(--status-safe);">
+                        <i class="fas fa-circle-check"></i>
+                    </div>
+                </div>
+                <div id="val-safe" class="stat-card-value" style="font-size: 1.5rem; margin: 0; color: var(--status-safe);">0</div>
+                <p class="stat-card-desc" style="font-size: 0.72rem; margin: 0;">Concentrations in safe zone</p>
+            </div>
+        </div>
+
+        <!-- 3. Warning Readings -->
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card card-warning" style="padding: 1.15rem;">
+                <div class="stat-card-header mb-1">
+                    <h2 class="stat-card-title" style="font-size: 0.8rem;">Warnings</h2>
+                    <div class="stat-card-icon" style="width: 32px; height: 32px; font-size: 1.05rem; background: var(--status-warning);">
+                        <i class="fas fa-triangle-exclamation"></i>
+                    </div>
+                </div>
+                <div id="val-warning" class="stat-card-value" style="font-size: 1.5rem; margin: 0; color: var(--status-warning);">0</div>
+                <p class="stat-card-desc" style="font-size: 0.72rem; margin: 0;">Elevated sensor entries</p>
+            </div>
+        </div>
+
+        <!-- 4. Danger Readings -->
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card card-danger" style="padding: 1.15rem;">
+                <div class="stat-card-header mb-1">
+                    <h2 class="stat-card-title" style="font-size: 0.8rem;">Danger logs</h2>
+                    <div class="stat-card-icon" style="width: 32px; height: 32px; font-size: 1.05rem; background: var(--status-danger);">
+                        <i class="fas fa-skull-crossbones"></i>
+                    </div>
+                </div>
+                <div id="val-danger" class="stat-card-value" style="font-size: 1.5rem; margin: 0; color: var(--status-danger);">0</div>
+                <p class="stat-card-desc" style="font-size: 0.72rem; margin: 0;">Critical leaks recorded</p>
+            </div>
+        </div>
+
+        <!-- 5. Highest Gas Reading -->
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card" style="padding: 1.15rem;">
+                <div class="stat-card-header mb-1">
+                    <h2 class="stat-card-title" style="font-size: 0.8rem;">Highest Peak</h2>
+                    <div class="stat-card-icon" style="width: 32px; height: 32px; font-size: 1.05rem; background: linear-gradient(135deg, #f59e0b, #ef4444);">
+                        <i class="fas fa-temperature-arrow-up"></i>
+                    </div>
+                </div>
+                <div id="val-highest" class="stat-card-value" style="font-size: 1.5rem; margin: 0;">0 PPM</div>
+                <p class="stat-card-desc" style="font-size: 0.72rem; margin: 0;">Absolute maximum PPM value</p>
+            </div>
+        </div>
+
+        <!-- 6. Lowest Gas Reading -->
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card" style="padding: 1.15rem;">
+                <div class="stat-card-header mb-1">
+                    <h2 class="stat-card-title" style="font-size: 0.8rem;">Lowest Floor</h2>
+                    <div class="stat-card-icon" style="width: 32px; height: 32px; font-size: 1.05rem; background: linear-gradient(135deg, #10b981, #06b6d4);">
+                        <i class="fas fa-temperature-arrow-down"></i>
+                    </div>
+                </div>
+                <div id="val-lowest" class="stat-card-value" style="font-size: 1.5rem; margin: 0;">0 PPM</div>
+                <p class="stat-card-desc" style="font-size: 0.72rem; margin: 0;">Absolute minimum PPM value</p>
+            </div>
+        </div>
+
+        <!-- 7. Average Gas Reading -->
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card" style="padding: 1.15rem;">
+                <div class="stat-card-header mb-1">
+                    <h2 class="stat-card-title" style="font-size: 0.8rem;">Average PPM</h2>
+                    <div class="stat-card-icon" style="width: 32px; height: 32px; font-size: 1.05rem; background: linear-gradient(135deg, #6366f1, #3b82f6);">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                </div>
+                <div id="val-average" class="stat-card-value" style="font-size: 1.5rem; margin: 0;">0 PPM</div>
+                <p class="stat-card-desc" style="font-size: 0.72rem; margin: 0;">Mean sensor concentration</p>
+            </div>
+        </div>
+
+        <!-- 8. Total Alerts -->
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card" style="padding: 1.15rem;">
+                <div class="stat-card-header mb-1">
+                    <h2 class="stat-card-title" style="font-size: 0.8rem;">Total Alerts</h2>
+                    <div class="stat-card-icon" style="width: 32px; height: 32px; font-size: 1.05rem; background: linear-gradient(135deg, #ef4444, #ec4899);">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                </div>
+                <div id="val-alerts" class="stat-card-value" style="font-size: 1.5rem; margin: 0;">0</div>
+                <p class="stat-card-desc" style="font-size: 0.72rem; margin: 0;">Total warnings and dangers</p>
+            </div>
+        </div>
+    </div>
+    <!-- --- /EIGHT STATISTICS CARDS --- -->
+
+    <!-- --- CHARTS GRID SECTION --- -->
+    <div class="row g-4 mb-4">
+        <!-- 1. Live Gas Level Line Chart -->
+        <div class="col-lg-8">
+            <div class="chart-card h-100">
+                <div class="chart-card-title border-bottom border-color pb-2 mb-3">
+                    <i class="fas fa-wave-square text-primary"></i>
+                    <span>Real-Time Gas Concentration (Latest 20 Readings)</span>
+                </div>
+                <div class="chart-container" style="position: relative; height: 260px;">
+                    <canvas id="live-line-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Status Distribution Pie Chart -->
+        <div class="col-lg-4">
+            <div class="chart-card h-100">
+                <div class="chart-card-title border-bottom border-color pb-2 mb-3">
+                    <i class="fas fa-chart-pie text-accent"></i>
+                    <span>Status Distribution Share</span>
+                </div>
+                <div class="chart-container" style="position: relative; height: 260px; display: flex; align-items: center; justify-content: center;">
+                    <canvas id="status-pie-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Daily Average Bar Chart -->
+        <div class="col-lg-6">
+            <div class="chart-card h-100">
+                <div class="chart-card-title border-bottom border-color pb-2 mb-3">
+                    <i class="fas fa-chart-bar text-warning"></i>
+                    <span>Daily Average Concentration Grouped by Date</span>
+                </div>
+                <div class="chart-container" style="position: relative; height: 240px;">
+                    <canvas id="daily-bar-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Weekly Trend Line Chart -->
+        <div class="col-lg-6">
+            <div class="chart-card h-100">
+                <div class="chart-card-title border-bottom border-color pb-2 mb-3">
+                    <i class="fas fa-chart-line text-success"></i>
+                    <span>Weekly Trend Analysis (Past 7 Days)</span>
+                </div>
+                <div class="chart-container" style="position: relative; height: 240px;">
+                    <canvas id="weekly-line-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- --- /CHARTS GRID SECTION --- -->
+
+    <!-- --- LOWER SUMMARY GRID --- -->
+    <div class="row g-4 mb-4">
+        <!-- 5. Alert Doughnut & Analytics Summary Sheet -->
+        <div class="col-lg-8">
+            <div class="row g-4">
+                <!-- Doughnut Chart -->
+                <div class="col-md-6">
+                    <div class="chart-card h-100">
+                        <div class="chart-card-title border-bottom border-color pb-2 mb-3">
+                            <i class="fas fa-circle-exclamation text-danger"></i>
+                            <span>Incident Alert Ratios</span>
+                        </div>
+                        <div class="chart-container" style="position: relative; height: 220px; display: flex; align-items: center; justify-content: center;">
+                            <canvas id="alert-doughnut-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Analytics Summary Table -->
+                <div class="col-md-6">
+                    <div class="chart-card h-100">
+                        <div class="chart-card-title border-bottom border-color pb-2 mb-3">
+                            <i class="fas fa-list-check text-info"></i>
+                            <span>Database Summary Sheet</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-borderless text-muted m-0" style="font-size: 0.9rem;">
+                                <tbody>
+                                    <tr class="border-bottom border-color">
+                                        <td class="py-2 ps-0"><strong>Peak Level:</strong></td>
+                                        <td id="sum-highest" class="py-2 text-end text-color fw-bold">0 PPM</td>
+                                    </tr>
+                                    <tr class="border-bottom border-color">
+                                        <td class="py-2 ps-0"><strong>Floor Level:</strong></td>
+                                        <td id="sum-lowest" class="py-2 text-end text-color fw-bold">0 PPM</td>
+                                    </tr>
+                                    <tr class="border-bottom border-color">
+                                        <td class="py-2 ps-0"><strong>Average Level:</strong></td>
+                                        <td id="sum-average" class="py-2 text-end text-color fw-bold">0 PPM</td>
+                                    </tr>
+                                    <tr class="border-bottom border-color">
+                                        <td class="py-2 ps-0"><strong>Median Level:</strong></td>
+                                        <td id="sum-median" class="py-2 text-end text-color fw-bold">0 PPM</td>
+                                    </tr>
+                                    <tr class="border-bottom border-color">
+                                        <td class="py-2 ps-0"><strong>Safe Ratio (%):</strong></td>
+                                        <td id="sum-safe-pct" class="py-2 text-end text-success fw-bold">0%</td>
+                                    </tr>
+                                    <tr class="border-bottom border-color">
+                                        <td class="py-2 ps-0"><strong>Warning Ratio (%):</strong></td>
+                                        <td id="sum-warning-pct" class="py-2 text-end text-warning fw-bold">0%</td>
+                                    </tr>
+                                    <tr class="border-bottom border-color">
+                                        <td class="py-2 ps-0"><strong>Danger Ratio (%):</strong></td>
+                                        <td id="sum-danger-pct" class="py-2 text-end text-danger fw-bold">0%</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-2 ps-0"><strong>Last Query:</strong></td>
+                                        <td id="sum-last-updated" class="py-2 text-end font-monospace text-muted" style="font-size: 0.8rem;">--</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Alerts Summary Panel -->
+        <div class="col-lg-4">
+            <div class="chart-card h-100">
+                <div class="chart-card-title border-bottom border-color pb-2 mb-3">
+                    <i class="fas fa-triangle-exclamation text-danger"></i>
+                    <span>Critical Alert Incidents Log (Top 5)</span>
+                </div>
+                <div class="table-responsive" style="max-height: 240px; overflow-y: auto;">
+                    <table class="table table-hover align-middle custom-table m-0" style="font-size: 0.85rem;">
+                        <thead>
+                            <tr style="position: sticky; top: 0; background-color: var(--card-bg); z-index: 10;">
+                                <th style="border-top: none; font-size: 0.75rem;">PPM</th>
+                                <th style="border-top: none; font-size: 0.75rem;">Status</th>
+                                <th style="border-top: none; font-size: 0.75rem;">Date</th>
+                                <th style="border-top: none; font-size: 0.75rem;">Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-alerts-table-body">
+                            <!-- Loaded via JS -->
+                            <tr>
+                                <td colspan="4" class="text-center py-4">
+                                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                        <span class="visually-hidden">Loading alerts...</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- --- /LOWER SUMMARY GRID --- -->
+
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Analytics specific scripting client -->
+<script src="{{ url_for('static', filename='js/analytics.js') }}"></script>
+{% endblock %}

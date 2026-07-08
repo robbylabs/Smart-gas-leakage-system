@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid p-0">
+
+    <!-- Page Header -->
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <div>
+            <h1>Industrial IoT Monitor</h1>
+            <p>Smart Gas Leakage Detection and Alert System - Real-time Node Readings</p>
+        </div>
+        <div>
+            <span class="badge bg-primary px-3 py-2"><i class="fas fa-satellite-dish me-2"></i>Live Telemetry Active</span>
+        </div>
+    </div>
+
+    <!-- Warning Danger Banner (Hidden by default) -->
+    <div id="danger-banner" class="alert alert-danger d-none align-items-center gap-3 p-3 mb-4" role="alert" style="border-radius: 12px; border-left: 6px solid #dc3545; box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2); animation: pulse-border 1.5s infinite;">
+        <i class="fas fa-radiation fa-2x fa-spin text-danger"></i>
+        <div>
+            <h4 class="alert-heading mb-1" style="font-weight: 700; color: #721c24;">CRITICAL ALARM: GAS LEAK DETECTED!</h4>
+            <p class="mb-0 text-muted">Sensor reports dangerous gas concentrations (>350 PPM). Please clear the area immediately and check ventilation systems.</p>
+        </div>
+    </div>
+
+    <!-- --- SIX STATISTICAL CARDS --- -->
+    <div class="row g-4 mb-4">
+        <!-- 1. Current Gas Level Card -->
+        <div class="col-xl-4 col-md-6">
+            <div id="card-gas-level" class="stat-card">
+                <div class="stat-card-header">
+                    <h2 class="stat-card-title">Current Gas Level</h2>
+                    <div class="stat-card-icon">
+                        <i class="fas fa-gauge-high"></i>
+                    </div>
+                </div>
+                <div id="val-gas-level" class="stat-card-value">--</div>
+                
+                <!-- Smooth Progress Bar Meter -->
+                <div class="progress mt-2 mb-3" style="height: 10px; border-radius: 5px; background-color: var(--border-color); overflow: hidden;">
+                    <div id="gas-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                
+                <p id="desc-gas-level" class="stat-card-desc">Waiting for telemetry input...</p>
+            </div>
+        </div>
+
+        <!-- 2. Current Status Card -->
+        <div class="col-xl-4 col-md-6">
+            <div id="card-status" class="stat-card">
+                <div class="stat-card-header">
+                    <h2 class="stat-card-title">Safety Status</h2>
+                    <div class="stat-card-icon" style="background: linear-gradient(135deg, var(--accent), #ec4899);">
+                        <i class="fas fa-shield-halved"></i>
+                    </div>
+                </div>
+                <div id="val-status" class="stat-card-value">
+                    <span class="badge-status">N/A</span>
+                </div>
+                <p id="desc-status" class="stat-card-desc">No sensor readings captured yet.</p>
+            </div>
+        </div>
+
+        <!-- 3. Highest Reading Card -->
+        <div class="col-xl-4 col-md-6">
+            <div id="card-highest" class="stat-card">
+                <div class="stat-card-header">
+                    <h2 class="stat-card-title">Highest Reading</h2>
+                    <div class="stat-card-icon" style="background: linear-gradient(135deg, #f59e0b, #ef4444);">
+                        <i class="fas fa-fire-flame-simple"></i>
+                    </div>
+                </div>
+                <div id="val-highest" class="stat-card-value">0 PPM</div>
+                <p class="stat-card-desc">Peak gas level ever recorded</p>
+            </div>
+        </div>
+
+        <!-- 4. Average Reading Card -->
+        <div class="col-xl-4 col-md-6">
+            <div id="card-average" class="stat-card">
+                <div class="stat-card-header">
+                    <h2 class="stat-card-title">Average Reading</h2>
+                    <div class="stat-card-icon" style="background: linear-gradient(135deg, #10b981, #3b82f6);">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                </div>
+                <div id="val-average" class="stat-card-value">0 PPM</div>
+                <p class="stat-card-desc">Calculated mean concentration</p>
+            </div>
+        </div>
+
+        <!-- 5. Total Readings Card -->
+        <div class="col-xl-4 col-md-6">
+            <div id="card-total" class="stat-card">
+                <div class="stat-card-header">
+                    <h2 class="stat-card-title">Total Logs</h2>
+                    <div class="stat-card-icon" style="background: linear-gradient(135deg, #6366f1, #3b82f6);">
+                        <i class="fas fa-list-ol"></i>
+                    </div>
+                </div>
+                <div id="val-total" class="stat-card-value">0</div>
+                <p class="stat-card-desc">Total sensor readings in database</p>
+            </div>
+        </div>
+
+        <!-- 6. Total Alerts Card -->
+        <div class="col-xl-4 col-md-6">
+            <div id="card-alerts" class="stat-card">
+                <div class="stat-card-header">
+                    <h2 class="stat-card-title">Total Alerts</h2>
+                    <div class="stat-card-icon" style="background: linear-gradient(135deg, #f43f5e, #ef4444);">
+                        <i class="fas fa-triangle-exclamation"></i>
+                    </div>
+                </div>
+                <div id="val-alerts" class="stat-card-value">0</div>
+                <p class="stat-card-desc">Total Warnings & Danger incidents</p>
+            </div>
+        </div>
+    </div>
+    <!-- --- /SIX STATISTICAL CARDS --- -->
+
+    <!-- --- CHARTS SECTION (Phase 7 Placeholders) --- -->
+    <div class="row g-4 mb-4">
+        <!-- Live Gas Level Chart Container -->
+        <div class="col-lg-8">
+            <div class="chart-card">
+                <div class="chart-card-title">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Live Gas Level Timeline</span>
+                </div>
+                <div class="chart-placeholder">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Live Gas Level Timeline</span>
+                    <small>Real-time sensor graphs will be enabled in Phase 7</small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Status Distribution Chart Container -->
+        <div class="col-lg-4">
+            <div class="chart-card">
+                <div class="chart-card-title">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Status Distribution</span>
+                </div>
+                <div class="chart-placeholder">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Status Distribution</span>
+                    <small>PPM classification ratios will be enabled in Phase 7</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weekly Trend Chart Container -->
+        <div class="col-12">
+            <div class="chart-card">
+                <div class="chart-card-title">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Weekly Trend Analysis</span>
+                </div>
+                <div class="chart-placeholder" style="height: 200px;">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Weekly Trend Analysis</span>
+                    <small>Historical data aggregations will be enabled in Phase 7</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- --- /CHARTS SECTION --- -->
+
+    <!-- --- RECENT READINGS TABLE --- -->
+    <div class="row">
+        <div class="col-12">
+            <div class="table-card">
+                <div class="table-card-header">
+                    <h2>Recent Sensor Logs</h2>
+                    <span class="text-muted text-sm-end text-start d-block">Showing latest 10 uploads</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover custom-table">
+                        <thead>
+                            <tr>
+                                <th>Log ID</th>
+                                <th>Gas Level (PPM)</th>
+                                <th>Status Alert</th>
+                                <th>Upload Date</th>
+                                <th>Upload Time</th>
+                            </tr>
+                        </thead>
+                        <input type="hidden" id="csrf_token" value="{{ csrf_token if csrf_token else '' }}">
+                        <tbody id="readings-table-body">
+                            <!-- Populated dynamically via JS -->
+                            <tr>
+                                <td colspan="5" class="text-center py-4">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading telemetry data...</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- --- /RECENT READINGS TABLE --- -->
+
+</div>
+{% endblock %}

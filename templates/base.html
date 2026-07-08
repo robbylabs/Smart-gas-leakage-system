@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Gas Detection & Alert System</title>
+    
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome CDN for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom Style Sheet -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+
+    <div id="wrapper" class="d-flex">
+        
+        <!-- --- SIDEBAR --- -->
+        <div id="sidebar-wrapper">
+            <div class="sidebar-brand">
+                <i class="fas fa-mask-ventilator"></i>
+                <h3>GasGuard IoT</h3>
+            </div>
+            
+            <ul class="sidebar-nav">
+                <li class="{% if active_page == 'dashboard' %}active{% endif %}">
+                    <a href="{{ url_for('main.dashboard') }}">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="{% if active_page == 'history' %}active{% endif %}">
+                    <a href="{{ url_for('main.history') }}">
+                        <i class="fas fa-history"></i>
+                        <span>History</span>
+                    </a>
+                </li>
+                <li class="{% if active_page == 'analytics' %}active{% endif %}">
+                    <a href="{{ url_for('main.analytics') }}">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Analytics</span>
+                    </a>
+                </li>
+                <li class="{% if active_page == 'about' %}active{% endif %}">
+                    <a href="{{ url_for('main.about') }}">
+                        <i class="fas fa-info-circle"></i>
+                        <span>About</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <span>System v1.2.0</span>
+            </div>
+        </div>
+        <!-- --- /SIDEBAR --- -->
+
+        <!-- Page Content Wrapper -->
+        <div id="page-content-wrapper">
+            
+            <!-- --- TOP NAVIGATION --- -->
+            <nav class="navbar navbar-expand-lg navbar-custom d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-3">
+                    <button class="toggle-btn" id="menu-toggle" aria-label="Toggle Sidebar">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <!-- Date and Time displaying dynamically -->
+                    <div class="datetime-display d-none d-md-flex">
+                        <i class="far fa-calendar-alt"></i>
+                        <span id="date-display">--</span>
+                        <span class="mx-1">|</span>
+                        <i class="far fa-clock"></i>
+                        <span id="time-display">--</span>
+                    </div>
+                </div>
+                
+                <div class="nav-actions">
+                    <!-- Dark Mode Toggle -->
+                    <button class="nav-btn" id="dark-mode-toggle" title="Toggle Dark/Light Mode" aria-label="Toggle Dark Mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    
+                    <!-- Notification Bell Placeholder -->
+                    <button class="nav-btn" title="System Notifications" aria-label="Notifications">
+                        <i class="far fa-bell"></i>
+                        <span class="badge-dot"></span>
+                    </button>
+                    
+                    <!-- Profile Icon Placeholder -->
+                    <button class="user-profile-btn">
+                        <div class="user-avatar">AD</div>
+                        <span class="d-none d-sm-inline">Admin</span>
+                    </button>
+                </div>
+            </nav>
+            <!-- --- /TOP NAVIGATION --- -->
+
+            <!-- --- MAIN BLOCK CONTENT --- -->
+            <div class="main-content">
+                <!-- Banner for API error alerts -->
+                <div id="error-container" style="display: none;"></div>
+                
+                {% block content %}{% endblock %}
+            </div>
+            <!-- --- /MAIN BLOCK CONTENT --- -->
+
+            <!-- --- FOOTER --- -->
+            <footer class="footer-custom mt-auto">
+                <div class="container-fluid">
+                    <div class="row align-items-center">
+                        <div class="col-md-6 text-md-start">
+                            <span>Smart Gas Leakage Detection and Alert System &copy; 2026</span>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <span class="me-3"><i class="fas fa-circle text-success me-1"></i> System Online</span>
+                            <!-- Loading status indicator -->
+                            <span id="pulse-spinner" class="spinner-container" style="display: none;">
+                                <span class="pulse-spinner"></span> Polling
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+            <!-- --- /FOOTER --- -->
+
+        </div>
+        <!-- /Page Content Wrapper -->
+
+    </div>
+
+    <!-- --- TOAST NOTIFICATIONS (Alerts) --- -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100;">
+        <div id="alarm-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="4000">
+            <div class="toast-header bg-danger text-white">
+                <i class="fas fa-radiation fa-spin me-2"></i>
+                <strong class="me-auto">CRITICAL TELEMETRY ALERT</strong>
+                <small>Just now</small>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body bg-dark text-white border-danger">
+                <strong>Gas Leakage Exceeded Limits!</strong> Ambient levels are currently in the Danger zone. Evacuate or ventilate the facility immediately.
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Core UI Client script -->
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>
